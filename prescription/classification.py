@@ -33,6 +33,8 @@ class auxiliary_data():
 
         self.aux_collection = aux_coll['criteres_repart']
         self.geo_collection = aux_coll['coordonnees_geographiques']
+        self.geo_collection['latitude'] = pd.to_numeric(self.geo_collection['latitude'], errors="coerce")
+        self.geo_collection['longitude'] = pd.to_numeric(self.geo_collection['longitude'], errors="coerce")
         self.section_collection = aux_coll['sections']
 
         self.data = None
