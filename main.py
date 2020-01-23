@@ -54,21 +54,21 @@ if 0:
     print('     ____________________________________________________________')
     print('     \n          Entrez le code insee de la commune  :           ')
     print('     ____________________________________________________________')
-    insee_client = str(input("\n          votre choix >>>  "))
+    insee_client = str(eval(input("\n          votre choix >>>  ")))
 else:
     insee_client = '77316'
 
 
 step += 1
 print('\n-------------------------------------------------------------------------------------')
-print(step, ' Lecture du fichier de configuration')
+print((step, ' Lecture du fichier de configuration'))
 cfg = tb.cfg
-print('           - Code INSEE : ', cfg["code_insee"], '\n')
-print('           - Année de comparaison : ', cfg['year'])
+print(('           - Code INSEE : ', cfg["code_insee"], '\n'))
+print(('           - Année de comparaison : ', cfg['year']))
 
 step += 1
 print('\n-------------------------------------------------------------------------------------')
-print(step, ' Lecture du fichier des comptes aggrégés ')
+print((step, ' Lecture du fichier des comptes aggrégés '))
 df_agr_full = pd.read_csv(data_path + 'comptes_individuels_communes_2020.csv', delimiter=';',dtype={'dep':str})# Mixed types: Corse 02A
 dfsections = df_agr_full.loc[df_agr_full['dep']=='77']
 df1= dfsections.loc[dfsections['inom']=='MORET-LOING-ET ORVANNE']
@@ -77,7 +77,7 @@ df1= dfsections.loc[dfsections['inom']=='MORET-LOING-ET ORVANNE']
 
 step += 1
 print('\n-------------------------------------------------------------------------------------')
-print(step, ' Lecture du fichier de géolocalisation ')
+print((step, ' Lecture du fichier de géolocalisation '))
 dfgeo = pd.read_csv(data_path + 'eucircos_regions_departements_circonscriptions_communes_gps_prepared.csv', delimiter=',')
 # print dfgeo.head()
 
@@ -85,7 +85,7 @@ dfgeo = pd.read_csv(data_path + 'eucircos_regions_departements_circonscriptions_
 
 step += 1
 print('\n-------------------------------------------------------------------------------------')
-print(step, ' Lecture du fichier de critere répartition ')
+print((step, ' Lecture du fichier de critere répartition '))
 df_repart_full = pd.read_csv(data_path + '2019-communes-criteres-repartition.csv', delimiter=',',dtype={'Informations générales - Code département de la commune':str})# Mixed types: Corse 02A
 # df = df_agr_full.loc[df_agr_full['dep']=='77']
 # df1 = df.loc[df['inom']=='MORET-LOING-ET ORVANNE']
@@ -102,7 +102,7 @@ if cfg['classification']['use']:
     step += 1
     print('')
     print('\n-------------------------------------------------------------------------------------')
-    print(step, " Selection des collectivités de la CSEF 'classification' ")
+    print((step, " Selection des collectivités de la CSEF 'classification' "))
 
     aux_collections = {}
     aux_collections['sections'] = df_agr_full  #dfsections
@@ -123,7 +123,7 @@ else:
 if cfg['classification']['use']:
     step += 1
     print('\n-------------------------------------------------------------------------------------')
-    print(step, " Récupération des données auxiliaires ('non balances comptables') pour les collectivités de la CSEF  ")
+    print((step, " Récupération des données auxiliaires ('non balances comptables') pour les collectivités de la CSEF  "))
     print("      (ces données sont notamment nécéssaires au calcul des ratios en valeur par habitant)")
     # new way to proceed via the class list_csef
     # todo: generaliser pour recuperer l'ensemble des aux data sous forme de dico
@@ -172,20 +172,20 @@ if cfg['classification']['use']:
         #display
         if 0:
             if i in ls_avance:
-                print i, ' / ', len(insee_classification['insee_csef']), ' communes requetées'
+                print(i, ' / ', len(insee_classification['insee_csef']), ' communes requetées')
 
 
 
 
     #check output
     if 0:
-        print ''
-        print '          Controle des données auxiliaires des CL dans la csef'
-        print "\n          - 'code_insee    :", aux_data_csef['code_insee']
-        print "\n          - 'pop_insee     :", aux_data_csef['pop_insee']
-        print "\n          - 'regime fiscal :", aux_data_csef['regime_fiscal']
-        print "\n          - 'nom           :", aux_data_csef['nom']
-        print "\n          - 'BBFB          :", aux_data_csef['BBFB']
+        print('')
+        print('          Controle des données auxiliaires des CL dans la csef')
+        print("\n          - 'code_insee    :", aux_data_csef['code_insee'])
+        print("\n          - 'pop_insee     :", aux_data_csef['pop_insee'])
+        print("\n          - 'regime fiscal :", aux_data_csef['regime_fiscal'])
+        print("\n          - 'nom           :", aux_data_csef['nom'])
+        print("\n          - 'BBFB          :", aux_data_csef['BBFB'])
 
 
 
