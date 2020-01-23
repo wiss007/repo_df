@@ -74,6 +74,11 @@ class auxiliary_data():
         Recupère les données_communales (~ fiches DGF)
         :return: data
         """
+        print(str(self.insee)[0:2])
+        print(str(self.insee)[2:5])
+        #print(self.section_collection['dep'])
+        print(self.section_collection.loc[(self.section_collection['dep'] == 
+            str(self.insee)[0:2])])
         if self.section is None:
             # attention traitement très particulier. dep est un str et icoom un int
             self.section = self.section_collection.loc[(self.section_collection['dep'] == str(self.insee)[0:2]) & (self.section_collection['icom'] == int(str(self.insee)[2:5]))]

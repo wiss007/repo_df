@@ -9,7 +9,7 @@ Module qui contient les fonctions nécéssaires à la notation des collectivité
 ##########################
 import inspect
 import numpy as np
-from maths_functions import binning, reject_outliers
+from .maths_functions import binning, reject_outliers
 import scipy as sp
 
 
@@ -48,8 +48,8 @@ def notation_theme(notes_ratios, poids_ratios):
     :return: la liste des notes des villes pour un theme
     """
     note=[]
-    for x in range(0,len(notes_ratios[notes_ratios.keys()[0]])):#loop sur les villes
-        note.append(np.sum([notes_ratios[key][x]*poids_ratios[key] for key in poids_ratios.keys()]))
+    for x in range(0,len(notes_ratios[list(notes_ratios.keys())[0]])):#loop sur les villes
+        note.append(np.sum([notes_ratios[key][x]*poids_ratios[key] for key in list(poids_ratios.keys())]))
     return note
 
 

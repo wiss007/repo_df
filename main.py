@@ -30,6 +30,8 @@ sys.path.append('Utils/')
 
 import prescription.toolbox as tb
 import prescription.classification as cf
+import prescription.notation as nt
+
 
 from types import FunctionType
 
@@ -76,7 +78,7 @@ df1= dfsections.loc[dfsections['inom']=='MORET-LOING-ET ORVANNE']
 step += 1
 print('\n-------------------------------------------------------------------------------------')
 print((step, ' Lecture du fichier de géolocalisation '))
-dfgeo = pd.read_csv(data_path + 'eucircos_regions_departements_circonscriptions_communes_gps_prepared.csv', delimiter=',')
+dfgeo = pd.read_csv(data_path + 'eucircos_regions_departements_circonscriptions_communes_gps_prepared.csv', delimiter=";")#',')
 # print dfgeo.head()
 
 
@@ -126,9 +128,11 @@ if cfg['classification']['use']:
     # new way to proceed via the class list_csef
     # todo: generaliser pour recuperer l'ensemble des aux data sous forme de dico
 
-    # initialisation aux_data_csef
+    # initialisation aux_data_csef et ratios_csef
     if 1:
         aux_data_csef = {}
+        ratios_csef = {}
+
         aux_data_csef['code_insee'] = []
         aux_data_csef['nom'] = []
         aux_data_csef['pop_insee'] = []
@@ -143,36 +147,34 @@ if cfg['classification']['use']:
         aux_data_csef['PFNB'] = []
         aux_data_csef['PTH'] = []
 
-        aux_data_csef['fprod'] = []
-        aux_data_csef['fpfcaf'] = []
-        aux_data_csef['rimpo1'] = []
-
-        aux_data_csef['rdgf'] = []
-        aux_data_csef['rdfctva'] = []
-        aux_data_csef['rpserdom'] = []
-        aux_data_csef['fcharge'] = []
-        aux_data_csef['fcfcaf'] = []
-        aux_data_csef['rperso'] = []
-        aux_data_csef['rachat'] = []
-        aux_data_csef['rfin'] = []
-        aux_data_csef['rcont'] = []
-        aux_data_csef['fres1'] = []
-        aux_data_csef['frecinv'] = []
-
-        aux_data_csef['fdepinv'] = []
-        aux_data_csef['requip'] = []
-        aux_data_csef['rremb'] = []
-        aux_data_csef['fbf1'] = []
-        aux_data_csef['fbf2'] = []
-        aux_data_csef['fres2'] = []
-        aux_data_csef['rcaf'] = []
-        aux_data_csef['rannu'] = []
-        aux_data_csef['fpth'] = []
-        aux_data_csef['fpfb'] = []
-        aux_data_csef['fpfnb'] = []
-        aux_data_csef['tth'] = []
-        aux_data_csef['tfb'] = []
-        aux_data_csef['tfnb'] = []
+        ratios_csef['fprod'] = []
+        ratios_csef['fpfcaf'] = []
+        ratios_csef['rimpo1'] = []
+        ratios_csef['rdgf'] = []
+        ratios_csef['rdfctva'] = []
+        ratios_csef['rpserdom'] = []
+        ratios_csef['fcharge'] = []
+        ratios_csef['fcfcaf'] = []
+        ratios_csef['rperso'] = []
+        ratios_csef['rachat'] = []
+        ratios_csef['rfin'] = []
+        ratios_csef['rcont'] = []
+        ratios_csef['fres1'] = []
+        ratios_csef['frecinv'] = []
+        ratios_csef['fdepinv'] = []
+        ratios_csef['requip'] = []
+        ratios_csef['rremb'] = []
+        ratios_csef['fbf1'] = []
+        ratios_csef['fbf2'] = []
+        ratios_csef['fres2'] = []
+        ratios_csef['rcaf'] = []
+        ratios_csef['rannu'] = []
+        ratios_csef['fpth'] = []
+        ratios_csef['fpfb'] = []
+        ratios_csef['fpfnb'] = []
+        ratios_csef['tth'] = []
+        ratios_csef['tfb'] = []
+        ratios_csef['tfnb'] = []
     i=0
     ls_avance =[5,10,15,20,25,35]
     # recupération
@@ -194,85 +196,73 @@ if cfg['classification']['use']:
         aux_data_csef['PFNB'].append(aux_data.get_data('2016')['Effort fiscal - Produit net FNB (hors TAFNB)'].values[0])
         aux_data_csef['PTH'].append(aux_data.get_data('2016')['Effort fiscal - Produit net TH'].values[0])
 
-
         section_data = cf.auxiliary_data(code_insee, aux_coll=aux_collections)
-        aux_data_csef['code_insee'].append(str(code_insee))
-
 
         ########################################
         #               Fonctionnement
         ########################################
         # produits = TRRF
-        aux_data_csef['fprod'].append(aux_data.get_section('2016')['fprod'].values[0])#
-        aux_data_csef['fpfcaf'].append(aux_data.get_section('2016')['fpfcaf'].values[0])#
-        aux_data_csef['rimpo1'].append(aux_data.get_section('2016')['rimpo1'].values[0])#
-        aux_data_csef['rdgf'].append(aux_data.get_section('2016')['rdgf'].values[0])#
-        aux_data_csef['rdfctva'].append(aux_data.get_section('2016')['rdfctva'].values[0])#
-        aux_data_csef['rpserdom'].append(aux_data.get_section('2016')['rpserdom'].values[0])#
+        ratios_csef['fprod'].append(aux_data.get_section('2016')['fprod'].values[0])#
+        ratios_csef['fpfcaf'].append(aux_data.get_section('2016')['fpfcaf'].values[0])#
+        ratios_csef['rimpo1'].append(aux_data.get_section('2016')['rimpo1'].values[0])#
+        ratios_csef['rdgf'].append(aux_data.get_section('2016')['rdgf'].values[0])#
+        ratios_csef['rdfctva'].append(aux_data.get_section('2016')['rdfctva'].values[0])#
+        ratios_csef['rpserdom'].append(aux_data.get_section('2016')['rpserdom'].values[0])#
         # charges  TDRF
-        aux_data_csef['fcharge'].append(aux_data.get_section('2016')['fcharge'].values[0])#
-        aux_data_csef['fcfcaf'].append(aux_data.get_section('2016')['fcfcaf'].values[0])#
-        aux_data_csef['rperso'].append(aux_data.get_section('2016')['rperso'].values[0])#
-        aux_data_csef['rachat'].append(aux_data.get_section('2016')['rachat'].values[0])#
-        aux_data_csef['rfin'].append(aux_data.get_section('2016')['rfin'].values[0])#
-        aux_data_csef['rcont'].append(aux_data.get_section('2016')['rcont'].values[0])#
+        ratios_csef['fcharge'].append(aux_data.get_section('2016')['fcharge'].values[0])#
+        ratios_csef['fcfcaf'].append(aux_data.get_section('2016')['fcfcaf'].values[0])#
+        ratios_csef['rperso'].append(aux_data.get_section('2016')['rperso'].values[0])#
+        ratios_csef['rachat'].append(aux_data.get_section('2016')['rachat'].values[0])#
+        ratios_csef['rfin'].append(aux_data.get_section('2016')['rfin'].values[0])#
+        ratios_csef['rcont'].append(aux_data.get_section('2016')['rcont'].values[0])#
 
-        aux_data_csef['fres1'].append(aux_data.get_section('2016')['fres1'].values[0])#
-
+        ratios_csef['fres1'].append(aux_data.get_section('2016')['fres1'].values[0])#
 
         ########################################
         #               Investissement
         ########################################
         # ressources d'investissement = TRRI
-        aux_data_csef['frecinv'].append(aux_data.get_section('2016')['frecinv'].values[0])#
-
+        ratios_csef['frecinv'].append(aux_data.get_section('2016')['frecinv'].values[0])#
 
         # emploi d'investissement = TDRI
-        aux_data_csef['fdepinv'].append(aux_data.get_section('2016')['fdepinv'].values[0])#
-        aux_data_csef['requip'].append(aux_data.get_section('2016')['requip'].values[0])#
-        aux_data_csef['rremb'].append(aux_data.get_section('2016')['rremb'].values[0])#
+        ratios_csef['fdepinv'].append(aux_data.get_section('2016')['fdepinv'].values[0])#
+        ratios_csef['requip'].append(aux_data.get_section('2016')['requip'].values[0])#
+        ratios_csef['rremb'].append(aux_data.get_section('2016')['rremb'].values[0])#
 
-        aux_data_csef['fbf1'].append(aux_data.get_section('2016')['fbf1'].values[0])#
-        aux_data_csef['fbf2'].append(aux_data.get_section('2016')['fbf2'].values[0])#
-        aux_data_csef['fres2'].append(aux_data.get_section('2016')['fres2'].values[0])#
-
+        ratios_csef['fbf1'].append(aux_data.get_section('2016')['fbf1'].values[0])#
+        ratios_csef['fbf2'].append(aux_data.get_section('2016')['fbf2'].values[0])#
+        ratios_csef['fres2'].append(aux_data.get_section('2016')['fres2'].values[0])#
 
         ########################################
         #               Dette
         ########################################
-        aux_data_csef['rcaf'].append(aux_data.get_section('2016')['rcaf'].values[0])#
-        aux_data_csef['rannu'].append(aux_data.get_section('2016')['rannu'].values[0])#
-
+        ratios_csef['rcaf'].append(aux_data.get_section('2016')['rcaf'].values[0])#
+        ratios_csef['rannu'].append(aux_data.get_section('2016')['rannu'].values[0])#
 
         ########################################
         #               Fiscalite
         ########################################
-        aux_data_csef['fpth'].append(aux_data.get_section('2016')['fpth'].values[0])#
-        aux_data_csef['fpfb'].append(aux_data.get_section('2016')['fpfb'].values[0])#
-        aux_data_csef['fpfnb'].append(aux_data.get_section('2016')['fpfnb'].values[0])#
-        aux_data_csef['tth'].append(aux_data.get_section('2016')['tth'].values[0])#
-        aux_data_csef['tfb'].append(aux_data.get_section('2016')['tfb'].values[0])#
-        aux_data_csef['tfnb'].append(aux_data.get_section('2016')['tfnb'].values[0])#
+        ratios_csef['fpth'].append(aux_data.get_section('2016')['fpth'].values[0])#
+        ratios_csef['fpfb'].append(aux_data.get_section('2016')['fpfb'].values[0])#
+        ratios_csef['fpfnb'].append(aux_data.get_section('2016')['fpfnb'].values[0])#
+        ratios_csef['tth'].append(aux_data.get_section('2016')['tth'].values[0])#
+        ratios_csef['tfb'].append(aux_data.get_section('2016')['tfb'].values[0])#
+        ratios_csef['tfnb'].append(aux_data.get_section('2016')['tfnb'].values[0])#
 
         #display
         if 0:
             if i in ls_avance:
                 print((i, ' / ', len(insee_classification['insee_csef']), ' communes requetées'))
 
-
-
-
     if 1:
         print('')
         print('          Controle des données auxiliaires des CL dans la csef')
-        print("\n          - 'code_insee    :", aux_data_csef['code_insee'])
-        print("\n          - 'nom           :", aux_data_csef['nom'])
-
-        print("\n          - 'pop_insee     :", aux_data_csef['pop_insee'])
-        print("\n          - 'regime fiscal :", aux_data_csef['regime_fiscal'])
-
-        print("\n          - 'FPFB          :", aux_data_csef['fpfb'])
-        print("\n          - 'FPROD          :", aux_data_csef['fprod'])
+        print(("\n          - 'code_insee    :", aux_data_csef['code_insee']))
+        print(("\n          - 'nom           :", aux_data_csef['nom']))
+        print(("\n          - 'pop_insee     :", aux_data_csef['pop_insee']))
+        print(("\n          - 'regime fiscal :", aux_data_csef['regime_fiscal']))
+        print("\n          - 'FPFB          :", ratios_csef['fpfb'])
+        print("\n          - 'FPROD          :", ratios_csef['fprod'])
 
 
 
@@ -284,64 +274,28 @@ if cfg['classification']['use']:
         #
         #####################################################
 
-
-
-
-#####################################################
-#
-#           Calcul de ratios
-#
-#####################################################
-
-
 #######################################################
-#   Pour chaque code insee figurant dans la liste
-#    on crée un objet suivant la classe m14_ens
+#   Notation des ratios
 #######################################################
-# step += 1
-# print '\n-------------------------------------------------------------------------------------'
-# print step, ' Récupération des données compta pour l ensemble des collectivités de la CSEF'
-#
-# m14_ens = ['' for i in range(len(aux_data_csef['code_insee']))]
-# m14_ens = []
-# ic = 0
-# start_time_all = time.time()
-# ratios_de_base = {}
-#
-# for csef in aux_data_csef['code_insee']:
-#
-#
-#     #todo adapter le calcul des ratios  à partir des nouvelles sections et nouveaux élément
-#
-#     self.ratio_collection
-#
-#     request = {
-#         'base_url': 'http://localhost:8020',
-#         'api_prefix': 'api/v1',
-#         'api_branch': 'getviewensemble/' + csef + '/',
-#         'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InBhaHBhIiwidXNlcl9pZCI6MSwiZW1haWwiOiJwYWhwYUBvcmFuZ2UuZnIiLCJleHAiOjE1NDQxOTIyNzh9.gbrlQaop293UzzPig1OoaHRwvwk_12mDITBNDj_LoVU'
-#     }
-#     print '       -Requete Vue Ensemble', csef, id
-#     c = simquest.SimQuest(request)
-#
-#
-#         id = aux_data_csef['code_insee'].index(csef)
-#         # for csef in ls_csef:
-#         ic += 1
-#         # m14 = m14_ensemble(cfg['database']['Simcalc']['ensemble_url_prefix'], csef, cfg['year'])
-#         # ensemble = SimcalcEnsemble(cfg['database']['Simcalc']['url_prefix_ensemble'], csef, cfg['year'], 1000.)
-#
-#         #fixme: remplacer aux_data_csef['pop_insee'][0] avec le bon index
-#         start_time = time.time()
-#         ensemble = SimcalcEnsemble(csef, cfg['year'], aux_data_csef['pop_insee'][id])
-#         for key in ensemble.montant.keys():
-#             if ic == 1:
-#                 ratios_de_base[key] = []
-#             ratios_de_base[key].append(ensemble.montant_par_habitant[key])
-#         elapsed_time = time.time() - start_time
-#
-#     elapsed_time = time.time() - start_time_all
-#     print '          - la récupération des données pour l ensemble de la csef a pris ', elapsed_time, ' secondes \n'
-#     # todo: tester il faut checker qu'on a bien m14_ens[i].insee == ls_csef[i]
-#     # print "ratios_de_base['trrf']", ratios_de_base['trrf']
+if cfg['notation']['use']:
+    # if 0:
+    step += 1
+    print('\n-------------------------------------------------------------------------------------')
+    print(step, ' Notation des collectivités de la csef sur  chaque  ratios')
+
+    notes_ratios_de_base = {}
+    for key in list(ratios_csef.keys()):
+        print('')
+        print('     -', key, '€/hab ', ratios_csef[key])
+        notes_ratios_de_base[key] = []
+        if key == 'det' or key == 'capdes':
+            notes_ratios_de_base[str(key)] = nt.notation_ratios(ratios_csef[key], cfg['notation']['note_max'],
+                                                                reverse=True)
+        else:
+            notes_ratios_de_base[str(key)] = nt.notation_ratios(ratios_csef[key], cfg['notation']['note_max'])
+        print('             notes', notes_ratios_de_base[key])
+
+
+
+
 
