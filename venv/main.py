@@ -113,21 +113,50 @@ if cfg['classification']['use']:
     aux_collections['coordonnees_geographiques'] = dfgeo
     aux_collections['criteres_repart'] = df_repart_full
 
-    # print 'Aux coll in main', aux_collections
-    # print 'Aux coll critere repart', aux_collections['criteres_repart']
-    # print 'Test', aux_collections['criteres_repart']['Informations générales - Code département de la commune']
-    # small_df = aux_collections['criteres_repart'].loc[aux_collections['criteres_repart']['Informations générales - Code département de la commune']=='77']
-    # print 'small df', small_df.head()
-
     aux_data = cf.auxiliary_data(insee_client, aux_coll=aux_collections)
-
-
-
-
     insee_classification = aux_data.find_communes_csef2(cfg['year'])
 
+else:
+    insee_classification = {}
+    insee_classification['insee_csef'] = liste_clients
 
 
+###################################################
+#  Get Auxillaries data for all that cities
+###################################################
+if cfg['classification']['use']:
+    step += 1
+    print '\n-------------------------------------------------------------------------------------'
+    print step, " Récupération des données auxiliaires ('non balances comptables') pour les collectivités de la CSEF  "
+    print "      (ces données sont notamment nécéssaires au calcul des ratios en valeur par habitant)"
+    # new way to proceed via the class list_csef
+    # todo: generaliser pour recuperer l'ensemble des aux data sous forme de dico
+    aux_data_csef = {}
+    aux_data_csef['code_insee'] = []
+    aux_data_csef['pop_insee'] = []
+    aux_data_csef['voirie'] = []
+    aux_data_csef['superficie'] = []
+    aux_data_csef['revenus'] = []
+    aux_data_csef['regime_fiscal'] = []
+    aux_data_csef['categorie'] = []
+    aux_data_csef['nom'] = []
+
+    for code_insee in insee_classification['insee_csef']:
+        aux_data = cf.auxiliary_data(code_insee, aux_coll=aux_collections)
+
+        #fixme: les dernières données concernent 2016 mais pas au delà
 
 
+        #fixme: il faudrait creer kes clef de aux_data_csef à partir de la liste des clefs
+        aux_data_csef['code_insee'].append(str(code_insee))
+        aux_data_csef['pop_insee'].append(aux_data.get_data('2016')[cfg['ratio_calculation']['effectif']])
+        aux_data_csef['voirie'].append(aux_data.get_data('2016')['VOIRIE'])
+        aux_data_csef['superficie'].append(aux_data.get_data('2016')['SUPERFICIE'])
+        aux_data_csef['revenus'].append(aux_data.get_data('2016')['REVENUS'])
+        aux_data_csef['regime_fiscal'].append(str(aux_data.get_fisca('2016')['REGIME_FISCAL']))
+        aux_data_csef['categorie'].append(aux_data.get_fisca('2016')['CATEGORIE'])
+        # aux_data_csef['nom'].append(str(aux_data.get_coord()['NOM']))
+        #fixme: probleme avec les accents des noms de villes
+        aux_data_csef['nom'].append((aux_data.get_coord()['NOM'].encode('utf8')))
+        # aux_data_csef['nom'].append((aux_data.get_coord()['NOM'].encode('ANSI')))
 
