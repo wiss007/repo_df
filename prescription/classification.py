@@ -15,8 +15,8 @@ import os.path
 import numpy as np
 import pandas as pd
 
-from utils import maths_functions as mf
-from .toolbox import cfg
+from prescription import maths_functions as mf
+from prescription.toolbox import cfg
 # from pymongo import MongoClient
 
 

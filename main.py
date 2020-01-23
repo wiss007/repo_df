@@ -28,10 +28,8 @@ import pandas as pd
 import sys
 sys.path.append('Utils/')
 
-import utils.toolbox as tb
-import utils.classification as cf
-
-
+import prescription.toolbox as tb
+import prescription.classification as cf
 
 from types import FunctionType
 
