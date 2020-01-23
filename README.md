@@ -1,5 +1,4 @@
-=========
-prescription
+Prescription
 =========
 
 Requirements
@@ -19,6 +18,14 @@ Test:
     python -m unittest2 test.py
 
 
+Data:
+-----
+
+2019-communes-criteres-repartition.csv.zip:
+ https://www.data.gouv.fr/fr/datasets/criteres-de-repartition-des-dotations-versees-par-letat-aux-collectivites-territoriales/  
+
+comptes_individuels_communes_2020.csv.zip:
+https://data.economie.gouv.fr/explore/dataset/comptes-individuels-des-communes/download/?format=csv&refine.an=2018&timezone=Europe/Berlin&use_labels_for_header=true&csv_separator=%3B
 
 Default connexion setting:
 -------------------------
