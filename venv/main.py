@@ -105,7 +105,7 @@ if cfg['classification']['use']:
     print step, " Selection des collectivités de la CSEF 'classification' "
 
     aux_collections = {}
-    aux_collections['sections'] = dfsections
+    aux_collections['sections'] = df_agr_full  #dfsections
     aux_collections['coordonnees_geographiques'] = dfgeo
     aux_collections['criteres_repart'] = df_repart_full
 
@@ -129,45 +129,131 @@ if cfg['classification']['use']:
     # todo: generaliser pour recuperer l'ensemble des aux data sous forme de dico
     aux_data_csef = {}
     aux_data_csef['code_insee'] = []
-    aux_data_csef['pop_insee'] = []
-    aux_data_csef['voirie'] = []
-    aux_data_csef['superficie'] = []
-    aux_data_csef['revenus'] = []
-    aux_data_csef['regime_fiscal'] = []
-    aux_data_csef['categorie'] = []
     aux_data_csef['nom'] = []
+    aux_data_csef['pop_insee'] = []
+    aux_data_csef['regime_fiscal'] = []
+    aux_data_csef['PFinh'] = []
+    aux_data_csef['PFisch'] = []
+    aux_data_csef['BBFB'] = []
+    aux_data_csef['BBFNB'] = []
 
+    aux_data_csef['EF'] = []
+    aux_data_csef['PFB'] = []
+    aux_data_csef['PFNB'] = []
+    aux_data_csef['PTH'] = []
+
+    aux_data_csef['ttt'] = []
+
+    i=0
+    ls_avance =[5,10,15,20,25,35]
     for code_insee in insee_classification['insee_csef']:
+        i+=1
         aux_data = cf.auxiliary_data(code_insee, aux_coll=aux_collections)
-
-        #fixme: les dernières données concernent 2016 mais pas au delà
-
-
         # Basic info
         aux_data_csef['code_insee'].append(str(code_insee))
         aux_data_csef['nom']. append(aux_data.get_data('2016')['Informations générales - Nom de la commune'].values[0])
         aux_data_csef['pop_insee'].append(aux_data.get_data('2016')['Informations générales - Population INSEE Année N '].values[0])
         aux_data_csef['regime_fiscal'].append(aux_data.get_data('2016')['Informations générales - Régime fiscal EPCI'].values[0])
-
         # Financial info
         aux_data_csef['PFinh'].append(aux_data.get_data('2016')['Potentiel fiscal et financier des communes - Potentiel financier par habitant'].values[0])
         aux_data_csef['PFisch'].append(aux_data.get_data('2016')['Potentiel fiscal et financier des communes - Potentiel fiscal 4 taxes par habitant'].values[0])
         aux_data_csef['BBFB'].append(aux_data.get_data('2016')['Potentiel fiscal et financier des communes - Bases brutes de FB'].values[0])
         aux_data_csef['BBFNB'].append(aux_data.get_data('2016')['Potentiel fiscal et financier des communes - Bases brutes de FNB'].values[0])
         aux_data_csef['EF'].append(aux_data.get_data('2016')['Effort fiscal - Effort fiscal'].values[0])
-        aux_data_csef['PFB'].append(aux_data.get_data('2016')['Effort fiscal -  Produit net FB'].values[0])
-        aux_data_csef['PFNB'].append(aux_data.get_data('2016')['Effort fiscal -  Produit net FNB (hors TAFNB)'].values[0])
-        aux_data_csef['PTH'].append(aux_data.get_data('2016')['Effort fiscal -  Produit net TH'].values[0])
+        aux_data_csef['PFB'].append(aux_data.get_data('2016')['Effort fiscal - Produit net FB'].values[0])
+        aux_data_csef['PFNB'].append(aux_data.get_data('2016')['Effort fiscal - Produit net FNB (hors TAFNB)'].values[0])
+        aux_data_csef['PTH'].append(aux_data.get_data('2016')['Effort fiscal - Produit net TH'].values[0])
 
-        # aux_data_csef['pop_insee'].append(aux_data.get_data('2016')[cfg['ratio_calculation']['effectif']])
-        # aux_data_csef['voirie'].append(aux_data.get_data('2016')['VOIRIE'])
-        # aux_data_csef['superficie'].append(aux_data.get_data('2016')['SUPERFICIE'])
-        # aux_data_csef['revenus'].append(aux_data.get_data('2016')['REVENUS'])
-        # aux_data_csef['regime_fiscal'].append(str(aux_data.get_fisca('2016')['REGIME_FISCAL']))
-        # aux_data_csef['categorie'].append(aux_data.get_fisca('2016')['CATEGORIE'])
 
-        # aux_data_csef['nom'].append(str(aux_data.get_coord()['NOM']))
-        #fixme: probleme avec les accents des noms de villes
-        aux_data_csef['nom'].append((aux_data.get_coord()['NOM'].encode('utf8')))
-        # aux_data_csef['nom'].append((aux_data.get_coord()['NOM'].encode('ANSI')))
+        section_data = cf.auxiliary_data(code_insee, aux_coll=aux_collections)
+        aux_data_csef['code_insee'].append(str(code_insee))
+        aux_data_csef['ttt'].append(aux_data.get_section('2016')['icom'].values[0])
+
+        #display
+        if 0:
+            if i in ls_avance:
+                print i, ' / ', len(insee_classification['insee_csef']), ' communes requetées'
+
+
+
+    #check output
+    if 0:
+        print ''
+        print '          Controle des données auxiliaires des CL dans la csef'
+        print "\n          - 'code_insee    :", aux_data_csef['code_insee']
+        print "\n          - 'pop_insee     :", aux_data_csef['pop_insee']
+        print "\n          - 'regime fiscal :", aux_data_csef['regime_fiscal']
+        print "\n          - 'nom           :", aux_data_csef['nom']
+        print "\n          - 'BBFB          :", aux_data_csef['BBFB']
+
+
+
+
+
+        #####################################################
+        #
+        #     A partir de là on fait du calcul de ratios
+        #
+        #####################################################
+
+
+
+
+#####################################################
+#
+#           Calcul de ratios
+#
+#####################################################
+
+
+#######################################################
+#   Pour chaque code insee figurant dans la liste
+#    on crée un objet suivant la classe m14_ens
+#######################################################
+# step += 1
+# print '\n-------------------------------------------------------------------------------------'
+# print step, ' Récupération des données compta pour l ensemble des collectivités de la CSEF'
+#
+# m14_ens = ['' for i in range(len(aux_data_csef['code_insee']))]
+# m14_ens = []
+# ic = 0
+# start_time_all = time.time()
+# ratios_de_base = {}
+#
+# for csef in aux_data_csef['code_insee']:
+#
+#
+#     #todo adapter le calcul des ratios  à partir des nouvelles sections et nouveaux élément
+#
+#     self.ratio_collection
+#
+#     request = {
+#         'base_url': 'http://localhost:8020',
+#         'api_prefix': 'api/v1',
+#         'api_branch': 'getviewensemble/' + csef + '/',
+#         'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InBhaHBhIiwidXNlcl9pZCI6MSwiZW1haWwiOiJwYWhwYUBvcmFuZ2UuZnIiLCJleHAiOjE1NDQxOTIyNzh9.gbrlQaop293UzzPig1OoaHRwvwk_12mDITBNDj_LoVU'
+#     }
+#     print '       -Requete Vue Ensemble', csef, id
+#     c = simquest.SimQuest(request)
+#
+#
+#         id = aux_data_csef['code_insee'].index(csef)
+#         # for csef in ls_csef:
+#         ic += 1
+#         # m14 = m14_ensemble(cfg['database']['Simcalc']['ensemble_url_prefix'], csef, cfg['year'])
+#         # ensemble = SimcalcEnsemble(cfg['database']['Simcalc']['url_prefix_ensemble'], csef, cfg['year'], 1000.)
+#
+#         #fixme: remplacer aux_data_csef['pop_insee'][0] avec le bon index
+#         start_time = time.time()
+#         ensemble = SimcalcEnsemble(csef, cfg['year'], aux_data_csef['pop_insee'][id])
+#         for key in ensemble.montant.keys():
+#             if ic == 1:
+#                 ratios_de_base[key] = []
+#             ratios_de_base[key].append(ensemble.montant_par_habitant[key])
+#         elapsed_time = time.time() - start_time
+#
+#     elapsed_time = time.time() - start_time_all
+#     print '          - la récupération des données pour l ensemble de la csef a pris ', elapsed_time, ' secondes \n'
+#     # todo: tester il faut checker qu'on a bien m14_ens[i].insee == ls_csef[i]
+#     # print "ratios_de_base['trrf']", ratios_de_base['trrf']
 

@@ -33,10 +33,10 @@ class auxiliary_data():
 
         self.aux_collection = aux_coll['criteres_repart']
         self.geo_collection = aux_coll['coordonnees_geographiques']
-        self.ratio_collection = aux_coll['sections']
+        self.section_collection = aux_coll['sections']
 
         self.data = None
-        self.fisca = None
+        self.section = None
         self.coord = None
 
         self.communes_departement = None
@@ -53,10 +53,7 @@ class auxiliary_data():
         :return: data
         """
         if self.data is None:
-
             self.data = self.aux_collection.loc[self.aux_collection['Informations générales - Code INSEE de la commune'] == int(self.insee)]
-
-
             # self.data = self.aux_collection.find({'$and': [{'ANNEE': int(year)}, {'INSEE': self.insee}]})[0]
         return self.data
 
@@ -70,14 +67,15 @@ class auxiliary_data():
             self.coord= self.geo_collection.find({'$and':[{'ANNEE':2017}, {'INSEE': self.insee}]})[0]
         return self.coord
 
-    def get_fisca(self, year):
+    def get_section(self, year):
         """
         Recupère les données_communales (~ fiches DGF)
         :return: data
         """
-        if self.fisca is None:
-            self.fisca = self.aux_collection['Informations générales - Régime fiscal EPCI'].loc[self.aux_collection['Informations générales - Code INSEE de la commune'] == int(self.insee)].values[0]
-        return self.fisca
+        if self.section is None:
+            # attention traitement très particulier. dep est un str et icoom un int
+            self.section = self.section_collection.loc[(self.section_collection['dep'] == str(self.insee)[0:2]) & (self.section_collection['icom'] == int(str(self.insee)[2:5]))]
+        return self.section
 
 
     def find_communes_strate(self, year):
@@ -126,9 +124,9 @@ class auxiliary_data():
         :return: liste de codes insee
         """
         if self.communes_regime_fiscal is None:
-            fiscalite = self.get_fisca('2017')
+            fiscalite = self.aux_collection['Informations générales - Régime fiscal EPCI'].loc[self.aux_collection['Informations générales - Code INSEE de la commune'] == int(self.insee)].values[0]
             print "       .le regime fiscal que l'on souhaite est ", fiscalite
-            datas = self.aux_collection.loc[self.aux_collection['Informations générales - Régime fiscal EPCI'] == self.fisca]
+            datas = self.aux_collection.loc[self.aux_collection['Informations générales - Régime fiscal EPCI'] == fiscalite]
             self.communes_regime_fiscal = []
             self.communes_regime_fiscal = datas['Informations générales - Code INSEE de la commune'].values
         return self.communes_regime_fiscal.tolist()
@@ -183,7 +181,6 @@ class auxiliary_data():
         :return: un dictionnaire des communes à comparer
         """
         #fixme: on a pas intégré les données communales pour 2017 2016 etc
-        #list_geo = set(self.find_communes_departement(year) + self.find_communes_proximite())
 
         print '   - find communities same dep'
         liste_departement= self.find_communes_departement(year)
@@ -201,7 +198,8 @@ class auxiliary_data():
         print '  - liste_proximite ', len(liste_proximite)
         print '  - liste_fisca', len(liste_fisca)
 
-        self.communes_csef  = mf.common_elements(liste_strate, liste_departement, liste_proximite, liste_fisca)
+        liste_geo = set(liste_departement + liste_proximite)
+        self.communes_csef  = mf.common_elements(liste_strate, liste_geo, liste_fisca)
 
         self.classif_insee['insee_csef'] = self.communes_csef
         self.classif_insee['insee_strate'] = self.communes_strate
