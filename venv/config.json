@@ -1,0 +1,109 @@
+{
+  //commentaires
+  "code_insee": "77316",//MORET-LOING-ET-ORVANNE
+  "year": "2018",
+  //"liste_clients": ["44033", "44056", "44081", "44137", "44138", "45291", "53137", "56127", "59514", "60012", "60172", "60342", "60584", "62043", "62252", "62557", "64147", "67073", "67472", "68021", "68042", "68054", "68103", "68126", "68132", "68163", "68168", "68174", "68183", "68232", "68264", "68265", "68297", "68309", "68341", "68349", "68353", "68362", "68382", "72054", "76474", "77079", "77315", "77377", "77409", "77475", "77513", "85100", "85298", "86062", "86174", "87126", "91617", "91631", "94001"],
+  //liste limitée au couple client / champion pour plus de rapidité
+  "liste_clients": ["76474", "77079", "86062", "86174", "87126"],
+  //"liste_clients": ["68132", "85298", "37159", "77409", "86174", "68135", "78327", "77315", "72054", "44033", "68264", "59153", "62557", "68126", "68183", "26179", "77475", "29053", "44137", "62043", "44149", "27213", "44081", "74002", "27108", "35176", "85089", "60172", "56127", "91534", "68309", "38043", "38231", "77257", "38013", "44138", "38094", "68265", "02361", "91617", "76474", "60012", "77495", "68103", "45291", "38001", "38012", "77404", "64147", "01450", "53137", "68042", "77377", "38507", "87126", "68353", "68021", "59514", "38297", "60584", "68382", "68341", "86062", "68149", "72008", "38386", "28098", "85100", "68163", "94001", "68168", "60342", "33324", "68349", "67472", "68297", "67073", "33104", "62252", "38261", "91631", "77513", "38124", "68362", "38105", "68174", "68232", "29238", "44056", "38084", "77079"]
+  //db.compta.find({COMPTE:"66111",YEAR:2017},{"roll":true, "INSEE":true}).pretty()
+  "database":{
+    "Mongo":{
+      "use": 1,
+      "client": "MongoClient()",
+      "db": "prescription_db",
+      "aux_collection": "donnees_communes",
+      "geo_collection": "coordonnees_geographiques_communes",
+      "regime_fiscal_collection": "regime_fiscal",
+      "comment": "pour le moment geo_collection est hardcodé dans classification.py"
+    },
+    "Simcalc":{
+      "use": 1,
+      "url_prefix_ensemble": "getviewensemble",
+      "url_prefix_fonctionnement": "viewall/1", //view/1
+      "url_prefix_investissement": "viewall/2", //view/1
+      "url_prefix_calculprospective": "prospectivecalcul/1",
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFudGhvbnkiLCJ1c2VyX2lkIjozMiwiZW1haWwiOiIiLCJleHAiOjE1NDA0Nzk0Nzd9.NfpzXbnU-ZrJBuF9nDE8lTKviR1d8tyax6__QLap-As#!"
+      //"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RkZXYiLCJ1c2VyX2lkIjoxMCwiZW1haWwiOiIiLCJleHAiOjE1Mzc1MjM3MTl9.4WgQC_qWwUGksYbsKZszEesvvp4TEt1NnHVZaZmcJ_Q'"
+    }
+  },
+  "classification":{
+    "use":1,
+    "perimeter":75 //le perimetre (en km) autour de la collectivité cliente
+  },
+  "ratio_calculation":{
+    "use":1,
+    "effectif": "POP_INSEE"
+  },
+  "notation":{
+    "use":1,
+    "note_max": 20
+  },
+  "champions_selection":{
+    "use": 1,
+    // c'est un peu risqué de faire ça car dans le code il faut veiller
+    // à conserver le meme ordre dansla variable positions_thematiques_client
+    "theme": ["Dette", "Recettes fiscales", "Personnel", "Produits des services", "Autres"],
+    "Dette":{
+      "det": 1,   // dette
+      "capdes": 1 // capacité desendettement
+      //encours de dette
+    },
+    "Recettes fiscales":{
+      "txebr":1   // taux epargne brute
+    },
+    "Personnel":{
+      "tdrf":1    //
+    },
+    "Produits des services":{
+      "rsi": 1    // résultats section invetissement
+    },
+    "Autres":{ //ratio et poids entrant dans la notation des grands themes
+      "rc": 1,   // résultats comptables
+      "trrf": 1, // total recettes réelles de fonctionnment
+      "tdrf": 1, // total dépenses réelles de fonctionnment
+      "trri": 1, // total recettes réelles d'investissement
+      "tdri": 1  // total dépenses réelles d'investissement
+    }
+  },
+  "theme_optimization":{
+    "theme_appelation": [" la gestion de la dette", "la gestion des recettes fiscales", "la gestion du personnel", " l'optimisation des produits de services", "Autres thèmes"],
+    "automatic_selection": 1
+  },
+  "simulation":{
+    "use":1,
+    "step_number": 12,  // le nombre de simulation pour chaque compte
+    "evolution_thrld": 50, // l'evolution maximale (en %) envisageable sur un compte,
+    "groupements":{
+      "budget":["charges_generales"],
+      "dette":["emprunts_et_dettes_assimilees_recette", "emprunts_et_dettes_assimilees_depense"],
+      "fiscalite":["fiscalite", "dotations"],
+      "personnel":["charges_de_personnel"],
+      "service":["services_et_ventes"],
+      "autres":["gestion_courante"]
+    }
+  },
+  "scenario_selection":{
+    "use":1
+  },
+  "graphics":{
+    "plot_path":"/home/anthony/.virtualenvs/prescription/prescription/plots/",
+    "colors":{
+      "lightred":"#ffcecc",
+      "lightyellow":"#fff8cc",
+      "lightgreen":"#ccffe2",
+      "lightblue":"#add8e6",
+      "lightgrey":"#d3d3d3",
+      "lightblack":"#262626",
+      "mediumred":"#ff8480",
+      "mediumyellow":"#ffe01a",
+      "mediumgreen":"#1aff7d",
+      "mediumblue":"#63b4cf",
+      "grey":"#808080",
+      "black":"#000000"
+    },
+    "graph_analyse_thematique": 0,
+    "distribution":0,
+    "graph_preparation_simulations":0
+  }
+}

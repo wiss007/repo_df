@@ -1,0 +1,11 @@
+fast-json==0.3.2
+iterutils==0.1.6
+json-awk==1.0.1.dev1
+numpy==1.16.6
+pandas==0.24.2
+python-dateutil==2.8.1
+pytz==2019.3
+scipy==1.2.3
+six==1.14.0
+ujson==1.35
+utils==0.9.0
