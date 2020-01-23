@@ -8,6 +8,7 @@
 ################################################################################
 
 import json
+import os.path
 #import inspect
 
 # from fastnumbers import fast_float, fast_int
@@ -60,6 +61,8 @@ def merge_two_dicts(x, y):
     return z
 
 
-cfg = clean_json('config.json') # pour utiliser le fichier de configuration comme une variable globale
+dir_path = os.path.dirname(os.path.realpath(__file__))
+config_path = os.path.join(dir_path, os.pardir, 'config.json')
+cfg = clean_json(config_path) # pour utiliser le fichier de configuration comme une variable globale
                                 # apres avoir appeler clean_json dans le main, il suffit de faire from utils.toolbox import cfg
                                 # dans les paquet qui nécéssite le fichier de configuration
