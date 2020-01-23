@@ -1,4 +1,4 @@
-#!/usr/bin/python2.7
+#!/usr/bin/python3
 #-*- coding: utf-8 -*-
 
 """
@@ -29,7 +29,7 @@ def calcul_distance(lon1, lat1, lon2, lat2):
     lat2 = float(lat2)
     if not -999.0 in [lon1, lat1, lon2, lat2]:
         if (-90.< lat1 <90.) and (-90. < lat2 < 90.) and (-180. < lon1 < 180.) and (-180. < lon2 < 180.) :
-            lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+            lon1, lat1, lon2, lat2 = list(map(radians, [lon1, lat1, lon2, lat2]))
             # haversine formula
             dlon = lon2 - lon1
             dlat = lat2 - lat1
@@ -59,7 +59,7 @@ def mean_mongo_data(collection, var_name, year, insee_list):
     pond = []
     req = collection.find({'$and': [{'ANNEE': int(year)}, {'INSEE': {'$in': insee_list}}]})
     for data in req:
-        print 'In fct', data[var_name]
+        print('In fct', data[var_name])
         var.append(data[var_name])
         pond.append(1.)
     pop_tot = np.sum(i for i in pond)
@@ -112,7 +112,7 @@ def reject_outliers(data):
             filtered.append(np.nan)
     # todo: voir si on retourne les valeurs rejetés
     rejected = [e for e in data if e not in filtered]
-    print '             données rejetées', len(rejected)+data.count(np.nan), '/', len(data), rejected
+    print('             données rejetées', len(rejected)+data.count(np.nan), '/', len(data), rejected)
     return filtered
 
 def binning(dist,nb_bins):
@@ -145,7 +145,7 @@ def calcul_par_habitant(self, comptes, pop):
         for ic in range(len(self.comptes)):
             # print '     calcul par habitant', self.comptes.keys()[ic], self.comptes.values()[ic]
             # r.append(float(self.comptes.values()[ic]) / float(self.pop))
-            self.valeurs_par_habitant[self.comptes.keys()[ic]] = float(self.comptes.values()[ic]) / float(self.pop)
+            self.valeurs_par_habitant[list(self.comptes.keys())[ic]] = float(list(self.comptes.values())[ic]) / float(self.pop)
     return self.valeurs_par_habitant
 
 

@@ -1,4 +1,4 @@
-#!/usr/bin/python2.7
+#!/usr/bin/python3
 #-*- coding: utf-8 -*-
 
 
@@ -16,7 +16,7 @@ import numpy as np
 import pandas as pd
 
 from utils import maths_functions as mf
-from toolbox import cfg
+from .toolbox import cfg
 # from pymongo import MongoClient
 
 
@@ -90,7 +90,7 @@ class auxiliary_data():
             for i in range(len(strate_thrld)):
                 if strate_thrld[i] <= pop < strate_thrld[i + 1]:
                     strate = i
-            print '       .les collectivités seront sélectionnées dans la strate', strate_thrld[strate],'-', strate_thrld[strate + 1], 'habitants'
+            print('       .les collectivités seront sélectionnées dans la strate', strate_thrld[strate],'-', strate_thrld[strate + 1], 'habitants')
 
             datas = self.aux_collection.loc[\
                 (self.aux_collection['Informations générales - Population INSEE Année N '] >=  strate_thrld[strate]) & \
@@ -108,7 +108,7 @@ class auxiliary_data():
         """
 
         if self.communes_departement is None:
-            print '       .les collectivités seront sélectionnées dans le département ', self.insee[0:2]
+            print('       .les collectivités seront sélectionnées dans le département ', self.insee[0:2])
 
             datas = self.aux_collection.loc[self.aux_collection['Informations générales - Code département de la commune'] == str(self.insee[0:2])]
             self.communes_departement = []
@@ -123,7 +123,7 @@ class auxiliary_data():
         """
         if self.communes_regime_fiscal is None:
             fiscalite = self.get_fisca('2017')
-            print "       .le regime fiscal que l'on souhaite est ", fiscalite
+            print("       .le regime fiscal que l'on souhaite est ", fiscalite)
             datas = self.aux_collection.loc[self.aux_collection['Informations générales - Régime fiscal EPCI'] == self.fisca]
             self.communes_regime_fiscal = []
             self.communes_regime_fiscal = datas['Informations générales - Code INSEE de la commune'].values
@@ -136,7 +136,7 @@ class auxiliary_data():
         :return: liste de codes insee
         """
         dist_thrld = cfg['classification']['perimeter']
-        print '       .les collectivités seront analysées dans un rayon de {0} km'.format(dist_thrld)
+        print('       .les collectivités seront analysées dans un rayon de {0} km'.format(dist_thrld))
 
         if self.communes_proximite is None:
 
@@ -181,21 +181,21 @@ class auxiliary_data():
         #fixme: on a pas intégré les données communales pour 2017 2016 etc
         #list_geo = set(self.find_communes_departement(year) + self.find_communes_proximite())
 
-        print '   - find communities same dep'
+        print('   - find communities same dep')
         liste_departement= self.find_communes_departement(year)
-        print '   - find communities same strate'
+        print('   - find communities same strate')
         liste_strate = self.find_communes_strate(year)
-        print '   - find communities same proximity'
+        print('   - find communities same proximity')
         liste_proximite = self.find_communes_proximite()
-        print '   - find communities same fisca'
+        print('   - find communities same fisca')
         liste_fisca = self.find_communes_regime_fiscal(year)
 
 
-        print '\n'
-        print '  - liste_strate ', len(liste_strate)
-        print '  - liste_departement ', len(liste_departement)
-        print '  - liste_proximite ', len(liste_proximite)
-        print '  - liste_fisca', len(liste_fisca)
+        print('\n')
+        print('  - liste_strate ', len(liste_strate))
+        print('  - liste_departement ', len(liste_departement))
+        print('  - liste_proximite ', len(liste_proximite))
+        print('  - liste_fisca', len(liste_fisca))
 
         self.communes_csef  = mf.common_elements(liste_strate, liste_departement, liste_proximite, liste_fisca)
 
@@ -205,7 +205,7 @@ class auxiliary_data():
         self.classif_insee['insee_proximite'] = self.communes_proximite
         self.classif_insee['insee_fiscalite'] = self.communes_regime_fiscal
 
-        print '  - liste communes csef', len(self.communes_csef)
+        print('  - liste communes csef', len(self.communes_csef))
         return self.classif_insee
 
 
