@@ -40,8 +40,7 @@ from types import FunctionType
 ##########################
 #    Parameters
 ##########################
-
-
+data_path  = '/Users/Anthony/PycharmProjects/data/'
 
 
 
@@ -70,7 +69,6 @@ print '           - Année de comparaison : ', cfg['year']
 step += 1
 print '\n-------------------------------------------------------------------------------------'
 print step, ' Lecture du fichier des comptes aggrégés '
-data_path  = '/Users/Anthony/PycharmProjects/data/'
 df_agr_full = pd.read_csv(data_path + 'comptes_individuels_communes_2020.csv', delimiter=';',dtype={'dep':str})# Mixed types: Corse 02A
 dfsections = df_agr_full.loc[df_agr_full['dep']=='77']
 df1= dfsections.loc[dfsections['inom']=='MORET-LOING-ET ORVANNE']
@@ -80,7 +78,6 @@ df1= dfsections.loc[dfsections['inom']=='MORET-LOING-ET ORVANNE']
 step += 1
 print '\n-------------------------------------------------------------------------------------'
 print step, ' Lecture du fichier de géolocalisation '
-data_path  = '/Users/Anthony/PycharmProjects/data/'
 dfgeo = pd.read_csv(data_path + 'eucircos_regions_departements_circonscriptions_communes_gps_prepared.csv', delimiter=',')
 # print dfgeo.head()
 
@@ -89,7 +86,6 @@ dfgeo = pd.read_csv(data_path + 'eucircos_regions_departements_circonscriptions_
 step += 1
 print '\n-------------------------------------------------------------------------------------'
 print step, ' Lecture du fichier de critere répartition '
-data_path  = '/Users/Anthony/PycharmProjects/data/'
 df_repart_full = pd.read_csv(data_path + '2019-communes-criteres-repartition.csv', delimiter=',',dtype={'Informations générales - Code département de la commune':str})# Mixed types: Corse 02A
 # df = df_agr_full.loc[df_agr_full['dep']=='77']
 # df1 = df.loc[df['inom']=='MORET-LOING-ET ORVANNE']
