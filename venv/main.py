@@ -127,25 +127,57 @@ if cfg['classification']['use']:
     print "      (ces données sont notamment nécéssaires au calcul des ratios en valeur par habitant)"
     # new way to proceed via the class list_csef
     # todo: generaliser pour recuperer l'ensemble des aux data sous forme de dico
-    aux_data_csef = {}
-    aux_data_csef['code_insee'] = []
-    aux_data_csef['nom'] = []
-    aux_data_csef['pop_insee'] = []
-    aux_data_csef['regime_fiscal'] = []
-    aux_data_csef['PFinh'] = []
-    aux_data_csef['PFisch'] = []
-    aux_data_csef['BBFB'] = []
-    aux_data_csef['BBFNB'] = []
 
-    aux_data_csef['EF'] = []
-    aux_data_csef['PFB'] = []
-    aux_data_csef['PFNB'] = []
-    aux_data_csef['PTH'] = []
+    # initialisation aux_data_csef
+    if 1:
+        aux_data_csef = {}
+        aux_data_csef['code_insee'] = []
+        aux_data_csef['nom'] = []
+        aux_data_csef['pop_insee'] = []
+        aux_data_csef['regime_fiscal'] = []
 
-    aux_data_csef['ttt'] = []
+        aux_data_csef['PFinh'] = []
+        aux_data_csef['PFisch'] = []
+        aux_data_csef['BBFB'] = []
+        aux_data_csef['BBFNB'] = []
+        aux_data_csef['EF'] = []
+        aux_data_csef['PFB'] = []
+        aux_data_csef['PFNB'] = []
+        aux_data_csef['PTH'] = []
 
+        aux_data_csef['fprod'] = []
+        aux_data_csef['fpfcaf'] = []
+        aux_data_csef['rimpo1'] = []
+
+        aux_data_csef['rdgf'] = []
+        aux_data_csef['rdfctva'] = []
+        aux_data_csef['rpserdom'] = []
+        aux_data_csef['fcharge'] = []
+        aux_data_csef['fcfcaf'] = []
+        aux_data_csef['rperso'] = []
+        aux_data_csef['rachat'] = []
+        aux_data_csef['rfin'] = []
+        aux_data_csef['rcont'] = []
+        aux_data_csef['fres1'] = []
+        aux_data_csef['frecinv'] = []
+
+        aux_data_csef['fdepinv'] = []
+        aux_data_csef['requip'] = []
+        aux_data_csef['rremb'] = []
+        aux_data_csef['fbf1'] = []
+        aux_data_csef['fbf2'] = []
+        aux_data_csef['fres2'] = []
+        aux_data_csef['rcaf'] = []
+        aux_data_csef['rannu'] = []
+        aux_data_csef['fpth'] = []
+        aux_data_csef['fpfb'] = []
+        aux_data_csef['fpfnb'] = []
+        aux_data_csef['tth'] = []
+        aux_data_csef['tfb'] = []
+        aux_data_csef['tfnb'] = []
     i=0
     ls_avance =[5,10,15,20,25,35]
+    # recupération
     for code_insee in insee_classification['insee_csef']:
         i+=1
         aux_data = cf.auxiliary_data(code_insee, aux_coll=aux_collections)
@@ -167,7 +199,62 @@ if cfg['classification']['use']:
 
         section_data = cf.auxiliary_data(code_insee, aux_coll=aux_collections)
         aux_data_csef['code_insee'].append(str(code_insee))
-        aux_data_csef['ttt'].append(aux_data.get_section('2016')['icom'].values[0])
+
+
+        ########################################
+        #               Fonctionnement
+        ########################################
+        # produits = TRRF
+        aux_data_csef['fprod'].append(aux_data.get_section('2016')['fprod'].values[0])#
+        aux_data_csef['fpfcaf'].append(aux_data.get_section('2016')['fpfcaf'].values[0])#
+        aux_data_csef['rimpo1'].append(aux_data.get_section('2016')['rimpo1'].values[0])#
+        aux_data_csef['rdgf'].append(aux_data.get_section('2016')['rdgf'].values[0])#
+        aux_data_csef['rdfctva'].append(aux_data.get_section('2016')['rdfctva'].values[0])#
+        aux_data_csef['rpserdom'].append(aux_data.get_section('2016')['rpserdom'].values[0])#
+        # charges  TDRF
+        aux_data_csef['fcharge'].append(aux_data.get_section('2016')['fcharge'].values[0])#
+        aux_data_csef['fcfcaf'].append(aux_data.get_section('2016')['fcfcaf'].values[0])#
+        aux_data_csef['rperso'].append(aux_data.get_section('2016')['rperso'].values[0])#
+        aux_data_csef['rachat'].append(aux_data.get_section('2016')['rachat'].values[0])#
+        aux_data_csef['rfin'].append(aux_data.get_section('2016')['rfin'].values[0])#
+        aux_data_csef['rcont'].append(aux_data.get_section('2016')['rcont'].values[0])#
+
+        aux_data_csef['fres1'].append(aux_data.get_section('2016')['fres1'].values[0])#
+
+
+        ########################################
+        #               Investissement
+        ########################################
+        # ressources d'investissement = TRRI
+        aux_data_csef['frecinv'].append(aux_data.get_section('2016')['frecinv'].values[0])#
+
+
+        # emploi d'investissement = TDRI
+        aux_data_csef['fdepinv'].append(aux_data.get_section('2016')['fdepinv'].values[0])#
+        aux_data_csef['requip'].append(aux_data.get_section('2016')['requip'].values[0])#
+        aux_data_csef['rremb'].append(aux_data.get_section('2016')['rremb'].values[0])#
+
+        aux_data_csef['fbf1'].append(aux_data.get_section('2016')['fbf1'].values[0])#
+        aux_data_csef['fbf2'].append(aux_data.get_section('2016')['fbf2'].values[0])#
+        aux_data_csef['fres2'].append(aux_data.get_section('2016')['fres2'].values[0])#
+
+
+        ########################################
+        #               Dette
+        ########################################
+        aux_data_csef['rcaf'].append(aux_data.get_section('2016')['rcaf'].values[0])#
+        aux_data_csef['rannu'].append(aux_data.get_section('2016')['rannu'].values[0])#
+
+
+        ########################################
+        #               Fiscalite
+        ########################################
+        aux_data_csef['fpth'].append(aux_data.get_section('2016')['fpth'].values[0])#
+        aux_data_csef['fpfb'].append(aux_data.get_section('2016')['fpfb'].values[0])#
+        aux_data_csef['fpfnb'].append(aux_data.get_section('2016')['fpfnb'].values[0])#
+        aux_data_csef['tth'].append(aux_data.get_section('2016')['tth'].values[0])#
+        aux_data_csef['tfb'].append(aux_data.get_section('2016')['tfb'].values[0])#
+        aux_data_csef['tfnb'].append(aux_data.get_section('2016')['tfnb'].values[0])#
 
         #display
         if 0:
@@ -178,14 +265,17 @@ if cfg['classification']['use']:
 
 
     #check output
-    if 0:
+    if 1:
         print ''
         print '          Controle des données auxiliaires des CL dans la csef'
         print "\n          - 'code_insee    :", aux_data_csef['code_insee']
+        print "\n          - 'nom           :", aux_data_csef['nom']
+
         print "\n          - 'pop_insee     :", aux_data_csef['pop_insee']
         print "\n          - 'regime fiscal :", aux_data_csef['regime_fiscal']
-        print "\n          - 'nom           :", aux_data_csef['nom']
-        print "\n          - 'BBFB          :", aux_data_csef['BBFB']
+
+        print "\n          - 'FPFB          :", aux_data_csef['fpfb']
+        print "\n          - 'FPROD          :", aux_data_csef['fprod']
 
 
 
