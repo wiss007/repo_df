@@ -143,14 +143,29 @@ if cfg['classification']['use']:
         #fixme: les dernières données concernent 2016 mais pas au delà
 
 
-        #fixme: il faudrait creer kes clef de aux_data_csef à partir de la liste des clefs
+        # Basic info
         aux_data_csef['code_insee'].append(str(code_insee))
-        aux_data_csef['pop_insee'].append(aux_data.get_data('2016')[cfg['ratio_calculation']['effectif']])
-        aux_data_csef['voirie'].append(aux_data.get_data('2016')['VOIRIE'])
-        aux_data_csef['superficie'].append(aux_data.get_data('2016')['SUPERFICIE'])
-        aux_data_csef['revenus'].append(aux_data.get_data('2016')['REVENUS'])
-        aux_data_csef['regime_fiscal'].append(str(aux_data.get_fisca('2016')['REGIME_FISCAL']))
-        aux_data_csef['categorie'].append(aux_data.get_fisca('2016')['CATEGORIE'])
+        aux_data_csef['nom']. append(aux_data.get_data('2016')['Informations générales - Nom de la commune'].values[0])
+        aux_data_csef['pop_insee'].append(aux_data.get_data('2016')['Informations générales - Population INSEE Année N '].values[0])
+        aux_data_csef['regime_fiscal'].append(aux_data.get_data('2016')['Informations générales - Régime fiscal EPCI'].values[0])
+
+        # Financial info
+        aux_data_csef['PFinh'].append(aux_data.get_data('2016')['Potentiel fiscal et financier des communes - Potentiel financier par habitant'].values[0])
+        aux_data_csef['PFisch'].append(aux_data.get_data('2016')['Potentiel fiscal et financier des communes - Potentiel fiscal 4 taxes par habitant'].values[0])
+        aux_data_csef['BBFB'].append(aux_data.get_data('2016')['Potentiel fiscal et financier des communes - Bases brutes de FB'].values[0])
+        aux_data_csef['BBFNB'].append(aux_data.get_data('2016')['Potentiel fiscal et financier des communes - Bases brutes de FNB'].values[0])
+        aux_data_csef['EF'].append(aux_data.get_data('2016')['Effort fiscal - Effort fiscal'].values[0])
+        aux_data_csef['PFB'].append(aux_data.get_data('2016')['Effort fiscal -  Produit net FB'].values[0])
+        aux_data_csef['PFNB'].append(aux_data.get_data('2016')['Effort fiscal -  Produit net FNB (hors TAFNB)'].values[0])
+        aux_data_csef['PTH'].append(aux_data.get_data('2016')['Effort fiscal -  Produit net TH'].values[0])
+
+        # aux_data_csef['pop_insee'].append(aux_data.get_data('2016')[cfg['ratio_calculation']['effectif']])
+        # aux_data_csef['voirie'].append(aux_data.get_data('2016')['VOIRIE'])
+        # aux_data_csef['superficie'].append(aux_data.get_data('2016')['SUPERFICIE'])
+        # aux_data_csef['revenus'].append(aux_data.get_data('2016')['REVENUS'])
+        # aux_data_csef['regime_fiscal'].append(str(aux_data.get_fisca('2016')['REGIME_FISCAL']))
+        # aux_data_csef['categorie'].append(aux_data.get_fisca('2016')['CATEGORIE'])
+
         # aux_data_csef['nom'].append(str(aux_data.get_coord()['NOM']))
         #fixme: probleme avec les accents des noms de villes
         aux_data_csef['nom'].append((aux_data.get_coord()['NOM'].encode('utf8')))

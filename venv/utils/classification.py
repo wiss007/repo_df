@@ -33,7 +33,7 @@ class auxiliary_data():
 
         self.aux_collection = aux_coll['criteres_repart']
         self.geo_collection = aux_coll['coordonnees_geographiques']
-        self.fisca_collection = aux_coll['sections']
+        self.ratio_collection = aux_coll['sections']
 
         self.data = None
         self.fisca = None
@@ -53,7 +53,11 @@ class auxiliary_data():
         :return: data
         """
         if self.data is None:
-            self.data = self.aux_collection.find({'$and': [{'ANNEE': int(year)}, {'INSEE': self.insee}]})[0]
+
+            self.data = self.aux_collection.loc[self.aux_collection['Informations générales - Code INSEE de la commune'] == int(self.insee)]
+
+
+            # self.data = self.aux_collection.find({'$and': [{'ANNEE': int(year)}, {'INSEE': self.insee}]})[0]
         return self.data
 
     def get_coord(self):
@@ -207,7 +211,5 @@ class auxiliary_data():
 
         print '  - liste communes csef', len(self.communes_csef)
         return self.classif_insee
-
-
 
 
