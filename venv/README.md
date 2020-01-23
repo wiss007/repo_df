@@ -5,12 +5,7 @@ prescription
 Requirements
 -----------
     * Python 2.7
-    * Simquest
-    * Simcalc running
-    * mongod running with a local mongo 
-        database: mydb
-        collections: donnee_commune, coordonnee_geographique_commune
-    bibliothèques python: requirements.txt
+    * bibliothèques python: requirements.txt
     
 Installation:
 ------------
