@@ -24,6 +24,7 @@ import copy
 import string
 
 import pandas as pd
+import numpy as np
 
 import sys
 sys.path.append('Utils/')
@@ -31,7 +32,6 @@ sys.path.append('Utils/')
 import prescription.toolbox as tb
 import prescription.classification as cf
 import prescription.notation as nt
-
 
 from types import FunctionType
 
@@ -168,7 +168,10 @@ if cfg['classification']['use']:
         ratios_csef['fbf2'] = []
         ratios_csef['fres2'] = []
         ratios_csef['rcaf'] = []
+        ratios_csef['rdette'] = []
+        ratios_csef['fdette'] = []
         ratios_csef['rannu'] = []
+        ratios_csef['fannu'] = []
         ratios_csef['fpth'] = []
         ratios_csef['fpfb'] = []
         ratios_csef['fpfnb'] = []
@@ -236,8 +239,11 @@ if cfg['classification']['use']:
         ########################################
         #               Dette
         ########################################
+        ratios_csef['fdette'].append(aux_data.get_section('2016')['fdette'].values[0])#
+        ratios_csef['rdette'].append(aux_data.get_section('2016')['rdette'].values[0])#
         ratios_csef['rcaf'].append(aux_data.get_section('2016')['rcaf'].values[0])#
         ratios_csef['rannu'].append(aux_data.get_section('2016')['rannu'].values[0])#
+        ratios_csef['fannu'].append(aux_data.get_section('2016')['fannu'].values[0])#
 
         ########################################
         #               Fiscalite
@@ -261,8 +267,8 @@ if cfg['classification']['use']:
         print(("\n          - 'nom           :", aux_data_csef['nom']))
         print(("\n          - 'pop_insee     :", aux_data_csef['pop_insee']))
         print(("\n          - 'regime fiscal :", aux_data_csef['regime_fiscal']))
-        print("\n          - 'FPFB          :", ratios_csef['fpfb'])
-        print("\n          - 'FPROD          :", ratios_csef['fprod'])
+        print(("\n          - 'FPFB          :", ratios_csef['fpfb']))
+        print(("\n          - 'FPROD          :", ratios_csef['fprod']))
 
 
 
@@ -281,21 +287,55 @@ if cfg['notation']['use']:
     # if 0:
     step += 1
     print('\n-------------------------------------------------------------------------------------')
-    print(step, ' Notation des collectivités de la csef sur  chaque  ratios')
+    print((step, ' Notation des collectivités de la csef sur  chaque  ratios'))
 
+    inverted_notation=['rdette','fdette','rannue','fannue']
     notes_ratios_de_base = {}
+    #for key in list(ratios_csef.keys()):
+    #    print('')
+    #    print('     -', key, '€/hab ', ratios_csef[key])
     for key in list(ratios_csef.keys()):
         print('')
-        print('     -', key, '€/hab ', ratios_csef[key])
+        print('     -', key, ratios_csef[key])
         notes_ratios_de_base[key] = []
-        if key == 'det' or key == 'capdes':
+        if key in inverted_notation:
             notes_ratios_de_base[str(key)] = nt.notation_ratios(ratios_csef[key], cfg['notation']['note_max'],
                                                                 reverse=True)
         else:
             notes_ratios_de_base[str(key)] = nt.notation_ratios(ratios_csef[key], cfg['notation']['note_max'])
-        print('             notes', notes_ratios_de_base[key])
+        # print '             notes', notes_ratios_de_base[key]
 
 
 
 
+#######################################################
+#  Notation par grand theme et selection des champions
+#######################################################
+if cfg['champions_selection']['use']:
+    step += 1
+    print('')
+    print('\n-------------------------------------------------------------------------------------')
+    print(step, ' Regroupement des ratios et selection des champions par grand theme V3')
+
+    notes_themes = {}
+    champions = {}
+    champions2 = {}
+
+
+    # selections des champions thématiques (on garde le code_insee c'est plus safe qu'un index):
+    #  1- pour chaque theme on ne garde que les collectivités qui présentent la note thématique la plus élevée
+    for theme in cfg['champions_selection']['theme'][0:2]:
+        notes_themes[str(theme)] = nt.notation_theme(notes_ratios_de_base, cfg['champions_selection'][theme])
+
+        print('          notes du thème {0}: {1} '.format(theme, notes_themes[str(theme)]))
+        # fixme: il faut checker que la notation par grand theme prend bien en compte la ponderation que l'on a mise dans le fichier de config
+        # fixme checker where à la place de argwhere
+
+        idx = np.argwhere(notes_themes[theme] == np.amax(notes_themes[theme])).flatten().tolist()
+        # champions[str(theme)]= [aux_data_csef['code_insee'][id] for id in idx]
+        champions[str(theme)] = {}
+        champions[str(theme)]['insee'] = [aux_data_csef['code_insee'][id] for id in idx]
+        champions[str(theme)]['nom'] = [aux_data_csef['nom'][id] for id in idx]
+
+        print('       - Champions ', theme, ' : ', champions[str(theme)]['nom'], champions[str(theme)]['insee'], [notes_themes[str(theme)][id] for id in idx])
 
