@@ -70,6 +70,7 @@ step += 1
 print('\n-------------------------------------------------------------------------------------')
 print((step, ' Lecture du fichier des comptes aggrégés '))
 df_agr_full = pd.read_csv(data_path + 'comptes_individuels_communes_2020.csv', delimiter=';',dtype={'dep':str})# Mixed types: Corse 02A
+df_agr_full['dep'] = df_agr_full['dep'].str.replace('^0+', '',regex=True)
 dfsections = df_agr_full.loc[df_agr_full['dep']=='77']
 df1= dfsections.loc[dfsections['inom']=='MORET-LOING-ET ORVANNE']
 # print df1.head()
@@ -151,8 +152,9 @@ if cfg['classification']['use']:
         ratios_csef['fpfcaf'] = []
         ratios_csef['rimpo1'] = []
         ratios_csef['rdgf'] = []
-        ratios_csef['rdfctva'] = []
-        ratios_csef['rpserdom'] = []
+        #! not available in opendata file
+        #ratios_csef['rdfctva'] = []
+        #ratios_csef['rpserdom'] = []
         ratios_csef['fcharge'] = []
         ratios_csef['fcfcaf'] = []
         ratios_csef['rperso'] = []
@@ -209,8 +211,9 @@ if cfg['classification']['use']:
         ratios_csef['fpfcaf'].append(aux_data.get_section('2016')['fpfcaf'].values[0])#
         ratios_csef['rimpo1'].append(aux_data.get_section('2016')['rimpo1'].values[0])#
         ratios_csef['rdgf'].append(aux_data.get_section('2016')['rdgf'].values[0])#
-        ratios_csef['rdfctva'].append(aux_data.get_section('2016')['rdfctva'].values[0])#
-        ratios_csef['rpserdom'].append(aux_data.get_section('2016')['rpserdom'].values[0])#
+        #! no available in opendata file
+        #ratios_csef['rdfctva'].append(aux_data.get_section('2016')['rdfctva'].values[0])#
+        #ratios_csef['rpserdom'].append(aux_data.get_section('2016')['rpserdom'].values[0])#
         # charges  TDRF
         ratios_csef['fcharge'].append(aux_data.get_section('2016')['fcharge'].values[0])#
         ratios_csef['fcfcaf'].append(aux_data.get_section('2016')['fcfcaf'].values[0])#
