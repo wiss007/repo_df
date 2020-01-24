@@ -30,14 +30,16 @@
       "fpfnb": 1,  // Produit taxe fnb par hab
       "tth": 1,    // Taux taxe habitation par hab
       "tfb": 1,    // Taux taxe habitation par hab
-      "tfnb": 1,   // Taux taxe habitation par hab
-      "ttp": 1    // Taux taxe fonciere entreprise
+      //not exist?"ttp": 1,    // Taux taxe fonciere entreprise
+      "tfnb": 1   // Taux taxe habitation par hab
     },
     "Personnel":{
-      "tdrf":1    //
+      //not exist?"tdrf":1    //
+      "tfb": 1    // Taux taxe habitation par hab
     },
     "Produits des services":{
-      "rsi": 1    // résultats section invetissement
+      //not exist?"rsi": 1    // résultats section invetissement
+      "fpfnb": 1  // Produit taxe fnb par hab
     },
     "Autres":{ //ratio et poids entrant dans la notation des grands themes
       "fres1": 1,   // résultats comptables

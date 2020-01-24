@@ -327,7 +327,7 @@ if cfg['champions_selection']['use']:
 
     # selections des champions thématiques (on garde le code_insee c'est plus safe qu'un index):
     #  1- pour chaque theme on ne garde que les collectivités qui présentent la note thématique la plus élevée
-    for theme in cfg['champions_selection']['theme'][0:2]:
+    for theme in cfg['champions_selection']['theme']:# Show all themes[0:2]:
         notes_themes[str(theme)] = nt.notation_theme(notes_ratios_de_base, cfg['champions_selection'][theme])
 
         print('          notes du thème {0}: {1} '.format(theme, notes_themes[str(theme)]))
