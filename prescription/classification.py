@@ -178,7 +178,7 @@ class auxiliary_data():
     #     self.communes_csef  = mf.common_elements(list_geo, liste_strate, liste_fisca)
     #     return self.communes_csef
 
-    def find_communes_csef2(self,year):
+    def find_communes_csef2(self,year, departement=None, strate=None, proximite=None, fiscalite=None):
         """
         - Ajoute les communes du département aux communes des alentours
         - Ne retient que les communes de la bonne strate de population
@@ -188,14 +188,25 @@ class auxiliary_data():
         #fixme: on a pas intégré les données communales pour 2017 2016 etc
 
         print('   - find communities same dep')
-        liste_departement= self.find_communes_departement(year)
+        if departement:
+            liste_departement = list()
+        else:
+            liste_departement= self.find_communes_departement(year)
         print('   - find communities same strate')
-        liste_strate = self.find_communes_strate(year)
+        if strate:
+            liste_strate = list()
+        else:
+            liste_strate = self.find_communes_strate(year)
         print('   - find communities same proximity')
-        liste_proximite = self.find_communes_proximite()
+        if proximite:
+            liste_proximite = list()
+        else:
+            liste_proximite = self.find_communes_proximite()
         print('   - find communities same fisca')
-        liste_fisca = self.find_communes_regime_fiscal(year)
-
+        if fiscalite:
+            liste_fisca = list()
+        else:
+            liste_fisca = self.find_communes_regime_fiscal(year)
 
         print('\n')
         print('  - liste_strate ', len(liste_strate))

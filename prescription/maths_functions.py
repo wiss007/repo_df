@@ -42,15 +42,15 @@ def calcul_distance(lon1, lat1, lon2, lat2):
         km = 1000000.
     return km
 
-def common_elements(list1, list2, *lists):
-    if len(lists) == 0:
-        return [element for element in list1 if element in list2]
-    elif len(lists) == 1:
-        return [element for element in list1 if element in list2 and element in lists[0]]
-    elif len(lists) == 2:
-        return [element for element in list1 if element in list2 and element in lists[0] and element in lists[1]]
-    elif len(lists) == 3:
-        return [element for element in list1 if element in list2 and element in lists[0] and element in lists[1] and element in list[2]]
+def common_elements(*lists):
+    inter_list = list()
+    for single_list in lists:
+        if len(single_list) > 0:
+            if len(inter_list) == 0:
+                inter_list = single_list
+            else:
+                inter_list = list(set(inter_list) & set(single_list))
+    return inter_list
 
 def mean_mongo_data(collection, var_name, year, insee_list):
     #todo: rajouter un masque au cas ou certaines valeurs seraient manquantes
