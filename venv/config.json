@@ -17,14 +17,14 @@
   },
   "champions_selection":{
     "use": 1,
-    "theme": ["Dette", "Autres", "Recettes fiscales", "Personnel", "Produits des services", "Autres"],
-    "Dette":{
+    "theme": ["Autofinancement", "Charges", "Produits", "Investissement", "Dette", "Fond de roulement"],
+    "Autofinancement":{
       "rdette": 1, // Encours total de la dette au 31 décembre N €/hab
       "fdette": 1, // Encours total de la dette au 31 décembre N % prod fct
       "rannu": 1,  // annuité de la dette
       "fannu": 1   // annuité de la dette
     },
-    "Recettes fiscales":{
+    "Charges":{
       "fpth": 1,   // Produit taxe habitation par hab
       "fpfb": 1,   // Produit taxe fb par hab
       "fpfnb": 1,  // Produit taxe fnb par hab
@@ -33,13 +33,20 @@
       "tfnb": 1,   // Taux taxe habitation par hab
       "ttp": 1    // Taux taxe fonciere entreprise
     },
-    "Personnel":{
+    "Produits":{
       "tdrf":1    //
     },
-    "Produits des services":{
+    "Investissement":{
       "rsi": 1    // résultats section invetissement
     },
-    "Autres":{ //ratio et poids entrant dans la notation des grands themes
+    "Dette":{ //ratio et poids entrant dans la notation des grands themes
+      "fres1": 1,   // résultats comptables
+      "fprod": 1, // total recettes réelles de fonctionnment
+      "fcharge": 1, // total dépenses réelles de fonctionnment
+      "frecinv": 1, // total recettes réelles d'investissement
+      "fdepinv": 1  // total dépenses réelles d'investissement
+    },
+    "Fond de roulement":{ //ratio et poids entrant dans la notation des grands themes
       "fres1": 1,   // résultats comptables
       "fprod": 1, // total recettes réelles de fonctionnment
       "fcharge": 1, // total dépenses réelles de fonctionnment
